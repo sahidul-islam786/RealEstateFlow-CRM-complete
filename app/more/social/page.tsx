@@ -37,6 +37,8 @@ export default function SocialPage() {
   const router = useRouter();
   const [statusFilter, setStatusFilter] = useState<PostStatus | "All">("All");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingPost, setEditingPost] = useState<typeof socialPosts[0] | null>(null);
   const [newPost, setNewPost] = useState({
     type: "",
     caption: "",
@@ -73,6 +75,16 @@ export default function SocialPage() {
 
   const handleMarkPublished = (postId: string) => {
     toast.success("Post marked as published!");
+  };
+  const handleEditPost = (post: typeof socialPosts[0]) => {
+    setEditingPost(post);
+    setEditDialogOpen(true);
+  };
+
+  const handleSaveEdit = () => {
+    toast.success("Post updated successfully!");
+    setEditDialogOpen(false);
+    setEditingPost(null);
   };
 
   const getAssignedPerson = (userId: string) => {
@@ -245,7 +257,7 @@ export default function SocialPage() {
                       )}
                     </div>
                     <div className="mt-3 flex gap-2 border-t border-border pt-3">
-                      <Button size="sm" variant="outline" className="flex-1">
+                      <Button size="sm" variant="outline" className="flex-1" onClick={() => handleEditPost(post)}>
                         Edit
                       </Button>
                       {post.status !== "Published" && (
@@ -276,6 +288,61 @@ export default function SocialPage() {
           </div>
         )}
       </main>
+      {/* Edit Post Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Post</DialogTitle>
+          </DialogHeader>
+          {editingPost && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Platform</Label>
+                <Select
+                  value={editingPost.type}
+                  onValueChange={(v) => setEditingPost({ ...editingPost, type: v })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {platforms.map((p) => (
+                      <SelectItem key={p} value={p}>{p}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Caption</Label>
+                <Textarea
+                  value={editingPost.caption}
+                  onChange={(e) => setEditingPost({ ...editingPost, caption: e.target.value })}
+                  rows={4}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select
+                  value={editingPost.status}
+                  onValueChange={(v) => setEditingPost({ ...editingPost, status: v as PostStatus })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {postStatuses.map((s) => (
+                      <SelectItem key={s} value={s}>{s}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button onClick={handleSaveEdit} className="w-full">
+                Save Changes
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <BottomNav />
     </div>
