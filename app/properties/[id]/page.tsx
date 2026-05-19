@@ -43,6 +43,7 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
 
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState("");
+  const [sharedWith, setSharedWith] = useState<string[]>([]);
 
   if (!property) {
     return (
@@ -64,6 +65,7 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
     }
     toast.success(`Sent to ${selectedLeadData?.fullName}!`);
     setShareDialogOpen(false);
+    setSharedWith((prev) => prev.includes(selectedLead) ? prev : [...prev, selectedLead]);
     setSelectedLead("");
   };
 
@@ -177,6 +179,34 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
               </div>
             </CardContent>
           </Card>
+          <Card>
+  <CardContent className="p-4">
+    <h3 className="mb-3 font-semibold text-foreground">Shared With</h3>
+    {sharedWith.length === 0 ? (
+      <p className="text-sm text-muted-foreground">
+        Not shared with anyone yet.
+      </p>
+    ) : (
+      <div className="space-y-2">
+        {sharedWith.map((leadId) => {
+          const lead = leads.find((l) => l.id === leadId);
+          if (!lead) return null;
+          return (
+            <div key={leadId} className="flex items-center justify-between rounded-lg border border-border p-3">
+              <div>
+                <p className="font-medium text-foreground">{lead.fullName}</p>
+                <p className="text-xs text-muted-foreground">{lead.propertyType} • {lead.preferredLocation}</p>
+              </div>
+              <span className="rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700">
+                Shared ✓
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </CardContent>
+</Card>
         </div>
       </main>
 

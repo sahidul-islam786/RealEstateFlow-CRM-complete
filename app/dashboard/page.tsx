@@ -66,7 +66,7 @@ export default function DashboardPage() {
             <h1 className="text-xl font-bold text-foreground">Good morning, Arjun</h1>
             <p className="text-sm text-muted-foreground">{today_date}</p>
           </div>
-          <Button variant="ghost" size="icon" className="relative">
+          <Button variant="ghost" size="icon" className="relative"onClick={() => router.push("/more")}>
             <Bell className="h-5 w-5" />
             <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-destructive-foreground">
               3
@@ -83,12 +83,14 @@ export default function DashboardPage() {
             value={newLeadsToday}
             icon={TrendingUp}
             variant="purple"
+             onClick={() => router.push("/leads")}
           />
           <StatCard
             title="Calls Made"
             value={callsMade}
             icon={Phone}
             variant="teal"
+            onClick={() => router.push("/leads")}
           />
           <StatCard
             title="Follow-ups Due"
