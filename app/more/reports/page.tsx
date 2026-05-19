@@ -149,7 +149,7 @@ export default function ReportsPage() {
             <CardTitle className="text-base font-semibold">Lead Status Breakdown</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64">
+            <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -158,8 +158,8 @@ export default function ReportsPage() {
                     nameKey="status"
                     cx="50%"
                     cy="50%"
-                    outerRadius={80}
-                    label={({ status, count }) => `${status}: ${count}`}
+                    outerRadius={70}
+                    label={false}
                     labelLine={false}
                   >
                     {leadStatusBreakdown.map((_, index) => (
